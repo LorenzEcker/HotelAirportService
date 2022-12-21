@@ -1,0 +1,1 @@
+dotnet ef database update --project HotelAirportService.DataAccess --startup-project HotelAirportService\Server
