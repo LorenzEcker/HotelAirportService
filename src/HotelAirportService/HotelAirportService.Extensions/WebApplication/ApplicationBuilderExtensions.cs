@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace HotelAirportService.Extensions.WebApplication
 {
@@ -16,7 +9,7 @@ namespace HotelAirportService.Extensions.WebApplication
             application.UseSwagger();
             application.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("v1.0/swagger.json", "Hotel Airport Api Service");
+                options.SwaggerEndpoint("v1.0/swagger.json", "Hotel Airport Api");
 
                 //Do not show the whole model (for performance)
                 options.DefaultModelExpandDepth(1);

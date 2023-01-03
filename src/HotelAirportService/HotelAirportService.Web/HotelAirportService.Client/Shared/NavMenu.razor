@@ -1,0 +1,39 @@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> L
+
+<RadzenHeader>
+<div class="d-flex align-items-center">
+    <RadzenSidebarToggle Click="@(() => collapseNavMenu = !collapseNavMenu)"></RadzenSidebarToggle>
+    <RadzenLabel Text="Airport Service" Style="text-align: left; vertical-align: baseline; float: none; display: inline-block" />
+    <div class="ml-auto">
+    <RadzenProfileMenu></RadzenProfileMenu>
+    </div>
+</div>
+</RadzenHeader>
+<RadzenSidebar @bind-Expanded="@collapseNavMenu">
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Dashboard" Icon="space_dashboard"></RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Airporttransfer" Icon="transfer_within_a_station"></RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Drivers" Icon="account_circle"></RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Vehicles" Icon="airport_shuttle"></RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+    <RadzenPanelMenu>
+        <RadzenPanelMenuItem Text="Airport" Icon="local_airport"></RadzenPanelMenuItem>
+    </RadzenPanelMenu>
+</RadzenSidebar>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}

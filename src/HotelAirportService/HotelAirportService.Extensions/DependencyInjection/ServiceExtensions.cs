@@ -1,6 +1,5 @@
 ﻿using HotelAirportService.DataAccess.context;
 using HotelAirportService.Options;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
@@ -40,20 +39,6 @@ namespace HotelAirportService.Extensions.DependencyInjection
 
             services.AddSwaggerGen(options =>
             {
-                //options.AddSecurityRequirement(new OpenApiSecurityRequirement
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                Type = ReferenceType.SecurityScheme,
-                //                Id = "Bearer"
-                //            }
-                //        },
-                //        new string[] { }
-                //    }
-                //});
                 options.DocInclusionPredicate((version, apiDescription) =>
                 {
                     apiDescription.TryGetMethodInfo(out MethodInfo methodinfo);
@@ -124,6 +109,7 @@ namespace HotelAirportService.Extensions.DependencyInjection
 
             services.Configure<CorsOptions>(configuration.GetSection(CorsOptions.POSITION));
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.POSITION));
+            services.Configure<AviationStackOptions>(configuration.GetSection(AviationStackOptions.POSITION));
             return services;
         }
 
