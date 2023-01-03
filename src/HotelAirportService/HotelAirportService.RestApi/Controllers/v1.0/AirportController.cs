@@ -10,7 +10,7 @@ namespace HotelAirportService.RestApi.Controllers.v1._0
         [HttpGet]
         public ActionResult<int> FetchAirports()
         {
-
+            return Ok(1);
         }
     }
 }
