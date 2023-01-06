@@ -10,6 +10,6 @@ namespace HotelAirportService.Options
     {
         public const string POSITION = "ConnectionStrings";
 
-        public string HotelAirportServiceDb { get; set; } = default!;
+        public string HotelAirportServiceDb { get; set; }
     }
 }

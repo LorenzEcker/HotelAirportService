@@ -15,9 +15,9 @@ namespace HotelAirportService.Extensions.DependencyInjection
 {
     public static class ServiceCollectionHelper
     {
-        public static IServiceCollection AddServices(this IServiceCollection services)
+        public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
-
+            
             return services;
         }
 

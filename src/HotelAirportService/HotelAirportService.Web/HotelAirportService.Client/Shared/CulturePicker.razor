@@ -1,3 +1,0 @@
-@inject Microsoft.Extensions.Localization.IStringLocalizer<CulturePicker> L
-<RadzenDropDown @bind-Value="@culture" TValue="string" Data="@(new [] { new { Text = "English", Value = "en" }, new { Text = "Deutsch (Österreich)", Value = "de-AT" } })"
-    TextProperty="Text" ValueProperty="Value" Change="@ChangeCulture" />

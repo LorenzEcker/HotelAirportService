@@ -5,10 +5,10 @@ namespace HotelAirportService.RestApi.Controllers.v1._0
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AirportController : ControllerBase
+    public class BookingController : ControllerBase
     {
         [HttpGet]
-        public ActionResult<int> FetchAirports()
+        public ActionResult<int> GetBooking([FromQuery] string bId)
         {
             return Ok(1);
         }

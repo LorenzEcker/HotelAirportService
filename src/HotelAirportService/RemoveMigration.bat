@@ -1,1 +1,1 @@
-dotnet ef migrations remove --project HotelAirportService.DataAccess --startup-project HotelAirportService\Server
+dotnet ef migrations remove --project HotelAirportService.DataAccess --startup-project HotelAirportService.RestApi

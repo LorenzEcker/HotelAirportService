@@ -8,5 +8,6 @@ namespace HotelAirportService.Domain
         public string AirportShortName { get; set; }
         public int DistanceToAirport { get; set; }
         public TimeSpan TypicalDriveTime { get; set; }
+        public virtual ICollection<Ride> Rides { get; set; }
     }
 }

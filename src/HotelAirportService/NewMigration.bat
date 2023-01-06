@@ -1,1 +1,1 @@
-dotnet ef migrations add %1 --output-dir migrations --project HotelAirportService.DataAccess --startup-project HotelAirportService\Server --context HotelAirportServiceContext
+dotnet ef migrations add %1 --output-dir migrations --project HotelAirportService.DataAccess --startup-project HotelAirportService.RestApi --context HotelAirportServiceContext

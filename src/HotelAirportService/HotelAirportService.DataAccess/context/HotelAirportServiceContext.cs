@@ -19,7 +19,6 @@ namespace HotelAirportService.DataAccess.context
         public virtual DbSet<Booking> Booking { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<Driver> Driver { get; set; }
-        public virtual DbSet<Flight> Flight { get; set; }
         public virtual DbSet<Ride> Ride { get; set; }
 
 
@@ -54,16 +53,19 @@ namespace HotelAirportService.DataAccess.context
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            //builder.Entity<Airport>(entity =>
-            //{
-
-            //});
+            builder.Entity<Airport>(entity =>
+            {
+                entity.HasMany(a => a.Rides)
+                    .WithOne(r => r.Airport)
+                    .HasForeignKey(r => r.AirportId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
 
             builder.Entity<Booking>(entity =>
             {
                 entity.HasOne(b => b.Customer)
                 .WithMany(c => c.Bookings)
-                .HasForeignKey(b => b.Id)
+                .HasForeignKey(b => b.CustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
@@ -84,17 +86,13 @@ namespace HotelAirportService.DataAccess.context
 
             builder.Entity<Ride>(entity =>
             {
-                entity.HasOne(r => r.Flight)
-                .WithMany(f => f.Rides)
-                .HasForeignKey(r => r.Id);
-
                 entity.HasOne(r => r.Customer)
                 .WithMany(c => c.Rides)
-                .HasForeignKey(r => r.Id);
+                .HasForeignKey(r => r.CustomerId);
 
                 entity.HasOne(r => r.Driver)
                 .WithMany(d => d.Rides)
-                .HasForeignKey(r => r.Id);
+                .HasForeignKey(r => r.DriverId);
             });
         }
     }

@@ -1,0 +1,139 @@
+﻿@page "/booking"
+@using HotelAirportService.Domain
+@using HotelAirportService.WebApplication.Models
+
+@inject NotificationService NotificationService
+
+<h1>Neue Buchung!</h1>
+<h3>Buchen Sie hier einen neuen Flughafentransfer.</h3>
+
+<div class="d-flex flex-column align-items-center justify-content-center">
+    <EditForm class="mt-8" Model="@arrivalRide" OnValidSubmit="@SubmitNewRideArrival">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="airport-ari">Flughafen</span>
+                    <InputSelect class="form-control" placeholder="Flughafen" TValue="Guid" @bind-Value="arrivalRide.AirportId" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="guest-count-ari">Anzahl Gäste</span>
+                    <InputNumber class="form-control" TValue="int" @bind-Value="arrivalRide.Passengers" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="time-at-airport-ari">Abholzeit am Flughafen</span>
+                    <RadzenDatePicker class="form-control" TValue="DateTime" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" @bind-Value="arrivalRide.TimeAtAirport" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <button class="btn btn-primary form-control" type="submit">
+                        Bestätigen
+                    </button>
+                </div>
+                @if (arrivalRide.RideId != Guid.Empty)
+                {
+                    <div class="ml-auto">
+                        <div class="input-group input-group-sm mb-3">
+                            <button @onclick="() => deleteRide(arrivalRide.RideId)" class="btn btn-danger form-control" type="button">
+                                Löschen
+                            </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </EditForm>
+    @if (arrivalTimeError)
+    {
+        <div class="alert alert-danger" role="alert">
+            Keine Fahrer zum ausgewählten Zeitpunkt verfügbar!
+        </div>
+    }
+
+    <EditForm class="mt-8" Model="@departureRide" OnValidSubmit="@SubmitNewRideDeparture">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="container-fluid">
+            <div class="row">
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="airport-dep">Flughafen</span>
+                    <InputSelect class="form-control" placeholder="Flughafen" TValue="Guid" @bind-Value="departureRide.AirportId" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="guest-count-dep">Anzahl Gäste</span>
+                    <InputNumber class="form-control" TValue="int" @bind-Value="departureRide.Passengers" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <span class="input-group-text" id="time-at-airport-dep">Ankunftszeit am Flughafen</span>
+                    <RadzenDatePicker class="form-control" TValue="DateTime" ShowTime="true" TimeOnly="true" DateFormat="HH:mm" @bind-Value="departureRide.TimeAtAirport" />
+                </div>
+
+                <div class="input-group input-group-sm mb-3">
+                    <button class="btn btn-primary form-control" type="submit">
+                        Bestätigen
+                    </button>
+                </div>
+                @if (departureRide.RideId != Guid.Empty)
+                {
+                    <div class="ml-auto">
+                        <div class="input-group input-group-sm mb-3">
+                            <button @onclick="() => deleteRide(departureRide.RideId)" class="btn btn-danger form-control" type="button">
+                                Löschen
+                            </button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </EditForm>
+    @if (departureTimeError)
+    {
+        <div class="alert alert-danger" role="alert">
+            Keine Fahrer zum ausgewählten Zeitpunkt verfügbar!
+        </div>
+    }
+</div>
+
+@code {
+    private bool departureTimeError = false;
+
+    private bool arrivalTimeError = false;
+
+    private List<Airport> airports = new();
+
+    private NewRideModel arrivalRide = new();
+
+    private NewRideModel departureRide = new();
+
+    private void SubmitNewRideArrival()
+    {
+        showSuccessNotification();
+    }
+
+    private void SubmitNewRideDeparture()
+    {
+
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        //fetch airports
+    }
+
+    private void showSuccessNotification()
+    {
+        NotificationService.Notify(NotificationSeverity.Info, "Buchung erfolgreich.", "Sie können die Buch noch ändern", 5000);
+    }
+
+    private void deleteRide(Guid RideId)
+    {
+
+    }
+
+}

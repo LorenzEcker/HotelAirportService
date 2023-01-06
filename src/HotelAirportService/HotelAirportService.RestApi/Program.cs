@@ -32,4 +32,8 @@ else
 
 app.MapControllers();
 
+//using var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
+//using var ctx = app.Services.GetService<HotelAirportServiceContext>();
+//ctx.Database.Migrate();
+
 app.Run();

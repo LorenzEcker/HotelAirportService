@@ -9,10 +9,13 @@ namespace HotelAirportService.Domain
 {
     public class Booking : HotelAirportServiceBaseEntity
     {
+        public string BookingCode { get; set; }
+        public DateTime Arrival { get; set; }
+        public DateTime Departure { get; set; }
         public DateTime CheckIn { get; set; }
         public DateTime CheckOut { get; set; }
         public int RoomNumber { get; set; }
-        public bool HasFreeTransfer { get; set; }
         public Customer Customer { get; set; }
+        public Guid CustomerId { get; set; }
     }
 }
