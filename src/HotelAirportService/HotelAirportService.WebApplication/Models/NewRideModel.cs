@@ -11,6 +11,5 @@ public class NewRideModel
     public Guid AirportId { get; set; }
     [Required]
     public DateTime TimeAtAirport { get; set; }
-
     public Guid RideId { get; set; }
 }

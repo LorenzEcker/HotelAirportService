@@ -48,8 +48,8 @@ namespace HotelAirportService.DataAccess.migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("TypicalDriveTime")
-                        .HasColumnType("time");
+                    b.Property<int>("TypicalDriveTime")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

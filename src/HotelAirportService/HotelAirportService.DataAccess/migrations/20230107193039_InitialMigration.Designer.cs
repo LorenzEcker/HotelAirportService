@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HotelAirportService.DataAccess.migrations
 {
     [DbContext(typeof(HotelAirportServiceContext))]
-    [Migration("20221221005918_InitialMigration")]
+    [Migration("20230107193039_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -51,8 +51,8 @@ namespace HotelAirportService.DataAccess.migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
-                    b.Property<TimeSpan>("TypicalDriveTime")
-                        .HasColumnType("time");
+                    b.Property<int>("TypicalDriveTime")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -62,7 +62,15 @@ namespace HotelAirportService.DataAccess.migrations
             modelBuilder.Entity("HotelAirportService.Domain.Booking", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("Arrival")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BookingCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CheckIn")
                         .HasColumnType("datetime2");
@@ -73,11 +81,14 @@ namespace HotelAirportService.DataAccess.migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("HasFreeTransfer")
-                        .HasColumnType("bit");
+                    b.Property<DateTime>("Departure")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
@@ -86,6 +97,8 @@ namespace HotelAirportService.DataAccess.migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Booking");
                 });
@@ -96,7 +109,7 @@ namespace HotelAirportService.DataAccess.migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("AmmountOfLuggage")
+                    b.Property<string>("AmountOfLuggage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -137,41 +150,34 @@ namespace HotelAirportService.DataAccess.migrations
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Seats")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("Driver");
                 });
 
-            modelBuilder.Entity("HotelAirportService.Domain.Flight", b =>
+            modelBuilder.Entity("HotelAirportService.Domain.Ride", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Flight");
-                });
-
-            modelBuilder.Entity("HotelAirportService.Domain.Ride", b =>
-                {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("AirportId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("Deleted")
                         .HasColumnType("bit");
+
+                    b.Property<Guid>("DriverId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("datetime2");
@@ -182,6 +188,12 @@ namespace HotelAirportService.DataAccess.migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AirportId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("DriverId");
+
                     b.ToTable("Ride");
                 });
 
@@ -189,7 +201,7 @@ namespace HotelAirportService.DataAccess.migrations
                 {
                     b.HasOne("HotelAirportService.Domain.Customer", "Customer")
                         .WithMany("Bookings")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -198,29 +210,34 @@ namespace HotelAirportService.DataAccess.migrations
 
             modelBuilder.Entity("HotelAirportService.Domain.Ride", b =>
                 {
+                    b.HasOne("HotelAirportService.Domain.Airport", "Airport")
+                        .WithMany("Rides")
+                        .HasForeignKey("AirportId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("HotelAirportService.Domain.Customer", "Customer")
                         .WithMany("Rides")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("HotelAirportService.Domain.Driver", "Driver")
                         .WithMany("Rides")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("HotelAirportService.Domain.Flight", "Flight")
-                        .WithMany("Rides")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Airport");
 
                     b.Navigation("Customer");
 
                     b.Navigation("Driver");
+                });
 
-                    b.Navigation("Flight");
+            modelBuilder.Entity("HotelAirportService.Domain.Airport", b =>
+                {
+                    b.Navigation("Rides");
                 });
 
             modelBuilder.Entity("HotelAirportService.Domain.Customer", b =>
@@ -231,11 +248,6 @@ namespace HotelAirportService.DataAccess.migrations
                 });
 
             modelBuilder.Entity("HotelAirportService.Domain.Driver", b =>
-                {
-                    b.Navigation("Rides");
-                });
-
-            modelBuilder.Entity("HotelAirportService.Domain.Flight", b =>
                 {
                     b.Navigation("Rides");
                 });

@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using HotelAirportService.DataAccess.repository;
 
 namespace HotelAirportService.Extensions.DependencyInjection
 {
@@ -17,7 +18,8 @@ namespace HotelAirportService.Extensions.DependencyInjection
     {
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
-            
+            services.AddSingleton<HttpClient>();
+            services.AddScoped<HotelAirportServiceContext>();
             return services;
         }
 
@@ -29,6 +31,12 @@ namespace HotelAirportService.Extensions.DependencyInjection
             {
                 options.UseSqlServer(databaseOptions.HotelAirportServiceDb);
             });
+            return services;
+        }
+
+        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        {
+            services.AddScoped<IAirportRepository, AirportRepository>();
             return services;
         }
 
@@ -92,7 +100,7 @@ namespace HotelAirportService.Extensions.DependencyInjection
 
             services.AddCors(options =>
             {
-                options.AddDefaultPolicy(builder =>
+                options.AddPolicy(policyName, builder =>
                 {
                     builder.WithHeaders(corsOptions.AllowedHeaders);
                     builder.WithOrigins(corsOptions.AllowedOrigins);
@@ -109,7 +117,6 @@ namespace HotelAirportService.Extensions.DependencyInjection
 
             services.Configure<CorsOptions>(configuration.GetSection(CorsOptions.POSITION));
             services.Configure<DatabaseOptions>(configuration.GetSection(DatabaseOptions.POSITION));
-            services.Configure<AviationStackOptions>(configuration.GetSection(AviationStackOptions.POSITION));
             return services;
         }
 

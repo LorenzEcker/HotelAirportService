@@ -3,6 +3,7 @@
 @using HotelAirportService.WebApplication.Models
 
 @inject NotificationService NotificationService
+@inject HttpClient HttpClient
 
 <h1>Neue Buchung!</h1>
 <h3>Buchen Sie hier einen neuen Flughafentransfer.</h3>
@@ -60,7 +61,12 @@
             <div class="row">
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="airport-dep">Flughafen</span>
-                    <InputSelect class="form-control" placeholder="Flughafen" TValue="Guid" @bind-Value="departureRide.AirportId" />
+                    <InputSelect class="form-control" placeholder="Flughafen" TValue="Guid" @bind-Value="departureRide.AirportId">
+                        @foreach (Airport airport in airports)
+                        {
+                            <option value=@airport.Id>@airport.AirportName</option>
+                        }
+                    </InputSelect>
                 </div>
 
                 <div class="input-group input-group-sm mb-3">
@@ -124,6 +130,7 @@
     protected override async Task OnParametersSetAsync()
     {
         //fetch airports
+        airports = await HttpClient.GetFromJsonAsync<List<Airport>>("http://localhost:5030/api/v1.0/Airport");
     }
 
     private void showSuccessNotification()

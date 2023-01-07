@@ -1,0 +1,14 @@
+﻿[
+  {
+    "AirportName": "Flughafen Wien",
+    "AirportShortName": "VIE",
+    "DistanceToAirport": 250,
+    "TypicalDriveTime": 150
+  },
+  {
+    "AirportName": "Flughafen Linz",
+    "AirportShortName": "LNZ",
+    "DistanceToAirport": 25,
+    "TypicalDriveTime": 30
+  }
+]

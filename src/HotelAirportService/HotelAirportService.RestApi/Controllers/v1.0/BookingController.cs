@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelAirportService.RestApi.Controllers.v1._0
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [Route(RouteConstants.DEFAULT_ROUTE_NAME)]
+    [Produces("application/json")]
     public class BookingController : ControllerBase
     {
         [HttpGet]

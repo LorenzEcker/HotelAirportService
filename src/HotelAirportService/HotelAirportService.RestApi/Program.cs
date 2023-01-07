@@ -1,24 +1,37 @@
+using HotelAirportService.DataAccess.context;
 using HotelAirportService.Extensions.ConfigurationBuilder;
 using HotelAirportService.Extensions.DependencyInjection;
 using HotelAirportService.Extensions.WebApplication;
+using HotelAirportService.Options;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddConfigurationFiles();
 
 // Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddDatabases();
 builder.Services.AddOptionServices();
-builder.Services.AddSwagger();
+builder.Services.AddAppServices();
+builder.Services.AddRepositories();
+builder.Services.AddDatabases();
+builder.Services.AddControllers();
 builder.Services.AddCrossOriginRequests();
 builder.Services.AddVersioning();
+builder.Services.AddSwagger();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+//Migrate Database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
 
+    var context = services.GetRequiredService<HotelAirportServiceContext>();
+    context.Database.Migrate();
+}
+
+// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerToolSuite();
@@ -26,14 +39,19 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/v1.0/error");
+    app.UseExceptionHandler("/error");
     app.UseHsts();
 }
 
-app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    CorsOptions corsOptions = scope.ServiceProvider.GetRequiredService<IOptions<CorsOptions>>().Value;
+    app.UseCors(corsOptions.PolicyName);
+}
 
-//using var scope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
-//using var ctx = app.Services.GetService<HotelAirportServiceContext>();
-//ctx.Database.Migrate();
+
+app.SeedDatabase();
+
+app.MapControllers();
 
 app.Run();
