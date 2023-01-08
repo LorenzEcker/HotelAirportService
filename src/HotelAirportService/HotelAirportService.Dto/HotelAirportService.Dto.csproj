@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Enum\" />
+    <ProjectReference Include="..\HotelAirportService.Domain\HotelAirportService.Domain.csproj" />
   </ItemGroup>
 
 </Project>

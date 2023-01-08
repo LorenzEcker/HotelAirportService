@@ -7,11 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="seeding\json\airports.json" />
+    <Content Remove="Seeding\json\airports.json" />
+    <Content Remove="Seeding\json\drivers.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="seeding\json\airports.json">
+    <None Include="Seeding\json\drivers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </None>
+    <None Include="Seeding\json\airports.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Component</SubType>
     </None>
@@ -25,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotelAirportService.BusinessLogic\HotelAirportService.BusinessLogic.csproj" />
     <ProjectReference Include="..\HotelAirportService.Extensions\HotelAirportService.Extensions.csproj" />
   </ItemGroup>
 

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotelAirportService.BusinessLogic\HotelAirportService.BusinessLogic.csproj" />
     <ProjectReference Include="..\HotelAirportService.DataAccess\HotelAirportService.DataAccess.csproj" />
     <ProjectReference Include="..\HotelAirportService.Options\HotelAirportService.Options.csproj" />
   </ItemGroup>

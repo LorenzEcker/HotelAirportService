@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using HotelAirportService.BusinessLogic;
 using HotelAirportService.DataAccess.repository;
 
 namespace HotelAirportService.Extensions.DependencyInjection
@@ -19,6 +20,7 @@ namespace HotelAirportService.Extensions.DependencyInjection
         public static IServiceCollection AddAppServices(this IServiceCollection services)
         {
             services.AddSingleton<HttpClient>();
+            services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<HotelAirportServiceContext>();
             return services;
         }

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HotelAirportService.Domain\HotelAirportService.Domain.csproj" />
+    <ProjectReference Include="..\HotelAirportService.Dto\HotelAirportService.Dto.csproj" />
   </ItemGroup>
 
 </Project>

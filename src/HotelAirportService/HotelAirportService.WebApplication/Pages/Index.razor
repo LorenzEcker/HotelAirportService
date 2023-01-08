@@ -1,16 +1,20 @@
 ﻿@page "/"
 @using HotelAirportService.WebApplication.Models
-@using HotelAirportService.Domain
+@using HotelAirportService.WebApplication.Service
+
+@inject LoginService LoginService
+@inject NotificationService NotificationService
+
 <PageTitle>Neue Buchung</PageTitle>
 
 <h1>Guten Tag!</h1>
 <h3>Willkommen beim Hotel Airport Service.</h3>
 
-@if (!userLoggedIn)
+@if (!LoginService.IsLoggedIn)
 {
 <p>Um eine Fahrt zu buchen geben Sie bitte ihre Buchungsnummer an</p>
     <div class="d-flex flex-column align-items-center justify-content-center">
-        <EditForm class="mt-8" Model="@enterBookingCodeModel" OnValidSubmit="@SubmitBookingCode">
+        <EditForm class="mt-8" Model="@enterBookingCodeModel" OnValidSubmit="@SubmitBookingCodeAsync">
             <DataAnnotationsValidator />
             <ValidationSummary />
             <div class="container-fluid">
@@ -37,19 +41,19 @@ else
             <div class="container-fluid">
                 <div class="d-flex flex-column">
                     <div class="d-flex flex-row align-items-center justify-content-center">
-                        <h5 class="card-title">@booking.Customer.CustomerName @booking.BookingCode</h5>
-                        <h2 class="ml-3">@booking.RoomNumber</h2>
+                        <h5 class="card-title">@LoginService.Booking.Customer.CustomerName @LoginService.Booking.BookingCode</h5>
+                        <h2 class="ml-3">@LoginService.Booking.RoomNumber</h2>
                     </div>
                 </div>
                 <div class="d-flex flex-column">
                     <div class="d-flex flex-row align-items-center justify-content-around">
-                        <h5>Check In:<span class="badge badge-secondary ml-3">@booking.CheckIn.ToShortDateString()</span></h5>
-                        <h5>Check Out:<span class="badge badge-secondary ml-3">@booking.CheckOut.ToShortDateString()</span></h5>
+                        <h5>Check In:<span class="badge badge-secondary ml-3">@LoginService.Booking.CheckIn.ToShortDateString()</span></h5>
+                        <h5>Check Out:<span class="badge badge-secondary ml-3">@LoginService.Booking.CheckOut.ToShortDateString()</span></h5>
 
                     </div>
                     <div class="d-flex flex-row align-items-center justify-content-around">
-                        <h5>Ankunft:<span class="badge badge-secondary ml-3">@booking.Arrival.ToShortDateString()</span></h5>
-                        <h5>Abfahrt:<span class="badge badge-secondary ml-3">@booking.Departure.ToShortDateString()</span></h5>
+                        <h5>Ankunft:<span class="badge badge-secondary ml-3">@LoginService.Booking.Arrival.ToShortDateString()</span></h5>
+                        <h5>Abfahrt:<span class="badge badge-secondary ml-3">@LoginService.Booking.Departure.ToShortDateString()</span></h5>
                     </div>
                 </div>
             </div>
@@ -60,24 +64,22 @@ else
 @code
 {
     private EnterBookingCodeModel enterBookingCodeModel = new();
-    private bool userLoggedIn = true;
 
-    private Booking booking = new()
+    private async Task SubmitBookingCodeAsync()
     {
-        CheckIn = DateTime.Today.AddDays(-3), 
-        CheckOut = DateTime.Today, 
-        BookingCode = "1X2Y",
-        Customer = new () {CustomerName = "Test Customer"}
-    };
-
-    private void SubmitBookingCode()
-    {
-        //do rest call for checking booking code
+        bool res = await LoginService.LoginCustomerAsync(enterBookingCodeModel.BookingCode);
+        if (res)
+        {
+            NotificationService.Notify(NotificationSeverity.Success, "Erfolgreich", " Sie können nun Transfers buchen.");
+        }
+        else
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Fehler", "Diese Buchungsnummer existiert nicht.");
+        }
     }
 
     private void logout()
     {
-        userLoggedIn = false;
-        booking = new();
+        LoginService.LogoutCustomer();
     }
 }
