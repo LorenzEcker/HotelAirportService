@@ -30,6 +30,9 @@ namespace HotelAirportService.Extensions.WebApplication
             SeedDataProvider seedDataProvider = new();
 
             SeedAirports();
+            SeedDrivers();
+            SeedCustomers();
+            SeedBookings();
             return app;
 
             void SeedAirports()
@@ -47,6 +50,69 @@ namespace HotelAirportService.Extensions.WebApplication
                         if (!context.Airport.Any(p => p.AirportName == a.AirportName))
                         {
                             context.Airport.Add(a);
+                        }
+                    });
+                    context.SaveChanges();
+                }
+            }
+
+            void SeedDrivers()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    IServiceProvider services = scope.ServiceProvider;
+
+                    HotelAirportServiceContext context = services.GetRequiredService<HotelAirportServiceContext>();
+
+                    List<Driver> drivers = seedDataProvider.Drivers;
+
+                    drivers.ForEach(driver =>
+                    {
+                        if (!context.Driver.Any(e => e.DriverName == driver.DriverName))
+                        {
+                            context.Driver.Add(driver);
+                        }
+                    });
+                    context.SaveChanges();
+                }
+            }
+
+            void SeedCustomers()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    IServiceProvider services = scope.ServiceProvider;
+
+                    HotelAirportServiceContext context = services.GetRequiredService<HotelAirportServiceContext>();
+
+                    List<Customer> customers = seedDataProvider.Customers;
+
+                    customers.ForEach(customer =>
+                    {
+                        if (!context.Customer.Any(e => e.CustomerName == customer.CustomerName))
+                        {
+                            context.Customer.Add(customer);
+                        }
+                    });
+                    context.SaveChanges();
+                }
+            }
+
+            void SeedBookings()
+            {
+                using (var scope = app.Services.CreateScope())
+                {
+                    IServiceProvider services = scope.ServiceProvider;
+
+                    HotelAirportServiceContext context = services.GetRequiredService<HotelAirportServiceContext>();
+
+                    List<Booking> bookings = seedDataProvider.Bookings;
+
+                    bookings.ForEach(booking =>
+                    {
+                        if (!context.Booking.Any(b => b.BookingCode == booking.BookingCode))
+                        {
+                            context.Booking.Add(booking);
                         }
                     });
                     context.SaveChanges();

@@ -1,4 +1,5 @@
-﻿using HotelAirportService.DataAccess.repository;
+﻿using System.Diagnostics.Eventing.Reader;
+using HotelAirportService.DataAccess.repository;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelAirportService.RestApi.Controllers.v1._0;
@@ -17,9 +18,15 @@ public class RideController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public ActionResult<bool> DeleteRide(Guid id)
+    public async Task<ActionResult<bool>> DeleteRide(Guid id)
     {
-        return Ok(rideRepository.SoftDeleteAsync(id));
+        if(await rideRepository.SoftDeleteAsync(id))
+        {
+            return Ok();
+        }else
+        {
+            return BadRequest();
+        }
     }
 
 }

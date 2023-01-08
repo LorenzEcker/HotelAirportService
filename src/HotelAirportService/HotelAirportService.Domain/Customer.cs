@@ -1,10 +1,5 @@
-﻿using HotelAirportService.Domain.Base;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
+using HotelAirportService.Domain.Base;
 
 namespace HotelAirportService.Domain
 {
@@ -12,7 +7,9 @@ namespace HotelAirportService.Domain
     {
         public string CustomerName { get; set; }
         public string AmountOfLuggage { get; set; }
+        [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; }
+        [JsonIgnore]
         public ICollection<Ride> Rides { get; set; }
     }
 }

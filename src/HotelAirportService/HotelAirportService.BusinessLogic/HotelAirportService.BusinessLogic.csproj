@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\HotelAirportService.DataAccess\HotelAirportService.DataAccess.csproj" />
     <ProjectReference Include="..\HotelAirportService.Dto\HotelAirportService.Dto.csproj" />
   </ItemGroup>
 

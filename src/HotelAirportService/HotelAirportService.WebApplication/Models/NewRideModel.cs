@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HotelAirportService.Domain.Enum;
 
 namespace HotelAirportService.WebApplication.Models;
 
@@ -12,4 +13,5 @@ public class NewRideModel
     [Required]
     public DateTime TimeAtAirport { get; set; }
     public Guid RideId { get; set; }
+    public TravelType TravelType { get; set; }
 }

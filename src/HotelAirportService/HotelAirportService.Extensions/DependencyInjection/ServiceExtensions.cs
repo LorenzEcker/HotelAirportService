@@ -39,6 +39,10 @@ namespace HotelAirportService.Extensions.DependencyInjection
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IAirportRepository, AirportRepository>();
+            services.AddScoped<IBookingRepository, BookingRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IDriverRepository, DriverRepository>();
+            services.AddScoped<IRideRepository, RideRepository>();
             return services;
         }
 

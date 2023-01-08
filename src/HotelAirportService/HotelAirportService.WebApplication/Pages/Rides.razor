@@ -5,6 +5,7 @@
 @using HotelAirportService.Domain.Enum
 @using System.Text
 @using HotelAirportService.WebApplication.Service
+@using System.Net
 
 @inject NotificationService NotificationService
 @inject HttpClient HttpClient
@@ -14,6 +15,7 @@
 <h3>Buchen Sie hier einen neuen Flughafentransfer.</h3>
 
 <div class="d-flex flex-column align-items-center justify-content-center">
+    <h5>Transfer nach Ankunft buchen</h5>
     <EditForm class="mt-8" Model="@arrivalRide" OnValidSubmit="@SubmitNewRideArrival">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -40,7 +42,7 @@
                 </div>
 
                 <div class="input-group input-group-sm mb-3">
-                    <button class="btn btn-primary form-control" type="submit">
+                    <button class="btn btn-primary form-control" disabled="@(arrivalRide.RideId != Guid.Empty)" type="submit">
                         Bestätigen
                     </button>
                 </div>
@@ -48,7 +50,7 @@
                 {
                     <div class="ml-auto">
                         <div class="input-group input-group-sm mb-3">
-                            <button @onclick="() => DeleteRide(arrivalRide.RideId)" class="btn btn-danger form-control" type="button">
+                            <button @onclick="() => DeleteRide(arrivalRide)" class="btn btn-danger form-control" type="button">
                                 Löschen
                             </button>
                         </div>
@@ -63,7 +65,7 @@
             Keine Fahrer zum ausgewählten Zeitpunkt verfügbar!
         </div>
     }
-
+    <h5>Tranfer zu Abflug buchen</h5>
     <EditForm class="mt-8" Model="@departureRide" OnValidSubmit="@SubmitNewRideDepartureAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
@@ -90,7 +92,7 @@
                 </div>
 
                 <div class="input-group input-group-sm mb-3">
-                    <button class="btn btn-primary form-control" type="submit">
+                    <button class="btn btn-primary form-control" disabled="@(departureRide.RideId != Guid.Empty)" type="submit">
                         Bestätigen
                     </button>
                 </div>
@@ -98,7 +100,7 @@
                 {
                     <div class="ml-auto">
                         <div class="input-group input-group-sm mb-3">
-                            <button @onclick="() => DeleteRide(departureRide.RideId)" class="btn btn-danger form-control" type="button">
+                            <button @onclick="() => DeleteRide(departureRide)" class="btn btn-danger form-control" type="button">
                                 Löschen
                             </button>
                         </div>
@@ -123,13 +125,48 @@
 
     private List<Airport> airports = new();
 
-    private NewRideModel arrivalRide = new();
+    private NewRideModel arrivalRide = new() { TravelType = TravelType.Arrival };
 
-    private NewRideModel departureRide = new();
+    private NewRideModel departureRide = new() { TravelType = TravelType.Departure };
 
-    private void SubmitNewRideArrival()
+    private async Task SubmitNewRideArrival()
     {
-        ShowSuccessNotification();
+        arrivalTimeError = false;
+        if (LoginService.IsLoggedIn)
+        {
+            using StringContent jsonContent = new(JsonSerializer.Serialize(new
+            {
+                AirportId = arrivalRide.AirportId,
+                BookingId = LoginService.Booking.Id,
+                PassengerCount = arrivalRide.Passengers,
+                Type = TravelType.Arrival,
+                TimeAtAirport = DateOnly.FromDateTime(LoginService.Booking.CheckOut).ToDateTime(TimeOnly.FromDateTime(arrivalRide.TimeAtAirport))
+            }),
+                Encoding.UTF8, "application/json");
+
+            using HttpResponseMessage res = await HttpClient.PostAsync("http://localhost:5030/api/v1.0/Booking", jsonContent);
+            if (res.StatusCode == HttpStatusCode.OK)
+            {
+                try
+                {
+                    arrivalRide.RideId = (await res.Content.ReadFromJsonAsync<Ride>()).Id;
+                    StateHasChanged();
+                    ShowSuccessNotification();
+                }
+                catch
+                {
+                    arrivalTimeError = false;
+                }
+            }
+            else
+            {
+                ShowErrorNotification();
+            }
+        }
+        else
+        {
+            ShowErrorNotification();
+        }
     }
 
     private async Task SubmitNewRideDepartureAsync()
@@ -150,7 +187,7 @@
         }
         else
         {
-            NotificationService.Notify(NotificationSeverity.Error, "Login required", "Please enter your booking code on the homepage first.", 5000);
+            ShowErrorNotification();
         }
 
     }
@@ -158,6 +195,8 @@
     protected override async Task OnParametersSetAsync()
     {
         airports = await HttpClient.GetFromJsonAsync<List<Airport>>("http://localhost:5030/api/v1.0/Airport");
+        arrivalRide.AirportId = airports.Select(a => a.Id).FirstOrDefault();
+        departureRide.AirportId = airports.Select(a => a.Id).FirstOrDefault();
     }
 
     private void ShowSuccessNotification()
@@ -165,12 +204,26 @@
         NotificationService.Notify(NotificationSeverity.Info, "Buchung erfolgreich.", "Sie können die Buch noch ändern", 5000);
     }
 
-    private async Task DeleteRide(Guid RideId)
+    private void ShowErrorNotification()
     {
-        using HttpResponseMessage res = await HttpClient.DeleteAsync($"http://localhost:5030/api/v1.0/Ride/{RideId}");
-        if (await res.Content.ReadFromJsonAsync<bool>())
+        NotificationService.Notify(NotificationSeverity.Error, "Buchung fehlgeschlagen", "Bitte kontanktieren Sie uns.", 5000);
+    }
+
+    private async Task DeleteRide(NewRideModel rideModel)
+    {
+        HttpResponseMessage res = await HttpClient.DeleteAsync($"http://localhost:5030/api/v1.0/Ride/{rideModel.RideId}");
+        if (res.StatusCode == HttpStatusCode.OK)
         {
             NotificationService.Notify(NotificationSeverity.Info, "Delete", "successfull");
+            if (rideModel.TravelType == TravelType.Arrival)
+            {
+                arrivalRide = new() { TravelType = TravelType.Arrival };
+            }
+            else
+            {
+                departureRide = new() { TravelType = TravelType.Departure };
+            }
+            StateHasChanged();
         }
         else
         {

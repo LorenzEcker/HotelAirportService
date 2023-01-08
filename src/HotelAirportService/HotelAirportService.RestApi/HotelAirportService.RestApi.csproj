@@ -8,10 +8,20 @@
 
   <ItemGroup>
     <Content Remove="Seeding\json\airports.json" />
+    <Content Remove="Seeding\json\bookings.json" />
+    <Content Remove="Seeding\json\customers.json" />
     <Content Remove="Seeding\json\drivers.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Seeding\json\bookings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </None>
+    <None Include="Seeding\json\customers.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Component</SubType>
+    </None>
     <None Include="Seeding\json\drivers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Component</SubType>

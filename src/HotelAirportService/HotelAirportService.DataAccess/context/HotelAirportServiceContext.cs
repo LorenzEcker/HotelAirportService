@@ -56,6 +56,7 @@ namespace HotelAirportService.DataAccess.context
         {
             builder.Entity<Airport>(entity =>
             {
+                entity.HasQueryFilter(e => e.Deleted == false);
                 entity.HasMany(a => a.Rides)
                     .WithOne(r => r.Airport)
                     .HasForeignKey(r => r.AirportId)
@@ -70,23 +71,20 @@ namespace HotelAirportService.DataAccess.context
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
-            //builder.Entity<Customer>(entity =>
-            //{
+            builder.Entity<Customer>(entity =>
+            {
+                entity.HasQueryFilter(e => e.Deleted == false);
+            });
 
-            //});
-
-            //builder.Entity<Driver>(entity =>
-            //{
-
-            //});
-
-            //builder.Entity<Flight>(entity =>
-            //{
-
-            //});
+            builder.Entity<Driver>(entity =>
+            {
+                entity.HasQueryFilter(e => e.Deleted == false);
+            });
 
             builder.Entity<Ride>(entity =>
             {
+                entity.HasQueryFilter(e => e.Deleted == false);
+
                 entity.HasOne(r => r.Customer)
                 .WithMany(c => c.Rides)
                 .HasForeignKey(r => r.CustomerId);

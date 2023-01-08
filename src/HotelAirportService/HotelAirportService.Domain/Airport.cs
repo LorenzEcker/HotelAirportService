@@ -1,4 +1,5 @@
-﻿using HotelAirportService.Domain.Base;
+﻿using System.Text.Json.Serialization;
+using HotelAirportService.Domain.Base;
 
 namespace HotelAirportService.Domain
 {
@@ -8,6 +9,7 @@ namespace HotelAirportService.Domain
         public string AirportShortName { get; set; }
         public int DistanceToAirport { get; set; }
         public int TypicalDriveTime { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Ride> Rides { get; set; }
     }
 }

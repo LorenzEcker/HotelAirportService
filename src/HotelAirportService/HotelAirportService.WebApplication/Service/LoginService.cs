@@ -14,11 +14,21 @@ public class LoginService : ILoginService
     {
         this.httpClient = httpClient;
     }
-    
+
     public async Task<bool> LoginCustomerAsync(string bookingCode)
     {
-        Booking booking = await httpClient
-            .GetFromJsonAsync<Booking>($"http://localhost:5030/api/v1.0/Booking/{bookingCode}");
+        Booking? booking = null;
+        try
+        {
+            booking = await httpClient
+                .GetFromJsonAsync<Booking>($"http://localhost:5030/api/v1.0/Booking/{bookingCode}");
+        }
+        catch
+        {
+            booking = null;
+        }
+
+
         if (booking == null)
         {
             return false;
@@ -26,6 +36,7 @@ public class LoginService : ILoginService
         else
         {
             this.Booking = booking;
+            IsLoggedIn = true;
             return true;
         }
     }

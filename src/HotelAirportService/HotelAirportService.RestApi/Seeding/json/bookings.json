@@ -1,0 +1,11 @@
+﻿[
+  {
+    "BookingCode": "X3M4",
+    "Arrival": "2023-01-01T00:00:00Z",
+    "Departure": "2023-01-08T00:00:00Z",
+    "CheckIn": "0001-01-01T00:00:00Z",
+    "CheckOut": "0001-01-01T00:00:00Z",
+    "RoomNumber": 10,
+    "CustomerId": "F921AAD4-8AB2-4EFA-5AD9-08DAF172B466"
+  }
+]

@@ -26,7 +26,8 @@ namespace HotelAirportService.DataAccess.repository.Base
         public async Task<TEntity?> InsertAsync(TEntity entity)
         {
             await Task.Factory.StartNew(() => DbContext.Set<TEntity>().Add(entity));
-            return await GetAsync(entity);
+            await DbContext.SaveChangesAsync();
+            return entity;
         }
 
         public async Task<TEntity?> GetAsync(TEntity entity)
@@ -38,9 +39,15 @@ namespace HotelAirportService.DataAccess.repository.Base
         {
             TEntity? fetchedEntity = await GetAsync(entity);
             if (fetchedEntity == null)
+            {
                 return null;
+            }
             else
-                return (await Task.Factory.StartNew(() => DbContext.Set<TEntity>().Update(fetchedEntity))).Entity;
+            {
+                var e = DbContext.Set<TEntity>().Update(fetchedEntity).Entity;
+                await DbContext.SaveChangesAsync();
+                return e;
+            }
         }
 
         public async Task<bool> ExistsAsync(Guid id)
@@ -61,6 +68,7 @@ namespace HotelAirportService.DataAccess.repository.Base
                 {
                     e.Deleted = true;
                     DbContext.Set<TEntity>().Update(e);
+                    await DbContext.SaveChangesAsync();
                     return true;
                 }
                 return false;
@@ -73,6 +81,7 @@ namespace HotelAirportService.DataAccess.repository.Base
             if (await ExistsAsync(id))
             {
                 DbContext.Set<TEntity>().Remove((await GetByIdAsync(id))!);
+                await DbContext.SaveChangesAsync();
                 return true;
             }
             else return false;

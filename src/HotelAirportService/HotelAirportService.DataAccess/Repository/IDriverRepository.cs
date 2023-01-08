@@ -3,8 +3,7 @@ using HotelAirportService.Domain;
 
 namespace HotelAirportService.DataAccess.repository
 {
-    public interface IRideRepository : IBaseRepository<Ride>
+    public interface IDriverRepository : IBaseRepository<Driver>
     {
-        Task<List<Ride>> GetRidesForDay(DateOnly today);
     }
 }

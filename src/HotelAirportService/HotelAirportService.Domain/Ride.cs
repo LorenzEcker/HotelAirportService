@@ -4,6 +4,7 @@ namespace HotelAirportService.Domain
 {
     public class Ride : HotelAirportServiceBaseEntity
     {
+        public DateTime Date { get; set; }
         public Driver Driver { get; set; }
         public Guid DriverId { get; set; }
         public Customer Customer { get; set; }

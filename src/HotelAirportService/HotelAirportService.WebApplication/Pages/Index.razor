@@ -71,11 +71,13 @@ else
         if (res)
         {
             NotificationService.Notify(NotificationSeverity.Success, "Erfolgreich", " Sie können nun Transfers buchen.");
+            StateHasChanged();
         }
         else
         {
             NotificationService.Notify(NotificationSeverity.Error, "Fehler", "Diese Buchungsnummer existiert nicht.");
         }
+        enterBookingCodeModel = new();
     }
 
     private void logout()

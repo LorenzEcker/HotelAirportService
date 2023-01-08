@@ -12,8 +12,8 @@ builder.Configuration.AddConfigurationFiles();
 
 // Add services to the container.
 builder.Services.AddOptionServices();
-builder.Services.AddAppServices();
 builder.Services.AddRepositories();
+builder.Services.AddAppServices();
 builder.Services.AddDatabases();
 builder.Services.AddControllers();
 builder.Services.AddCrossOriginRequests();

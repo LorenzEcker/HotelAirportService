@@ -5,5 +5,5 @@ namespace HotelAirportService.BusinessLogic;
 
 public interface IBookingService
 {
-    Ride? TryBookRide(RideBookingDto rideBooking);
+    Task<Ride?> TryBookRide(RideBookingDto rideBooking);
 }
