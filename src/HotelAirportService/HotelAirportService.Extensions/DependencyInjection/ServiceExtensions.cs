@@ -55,26 +55,26 @@ namespace HotelAirportService.Extensions.DependencyInjection
             {
                 options.DocInclusionPredicate((version, apiDescription) =>
                 {
-                    apiDescription.TryGetMethodInfo(out MethodInfo methodinfo);
+                    apiDescription.TryGetMethodInfo(out MethodInfo methodInfo);
 
-                    IEnumerable<ApiVersion> actionVersions = methodinfo
+                    IEnumerable<ApiVersion> actionVersions = methodInfo
                         .GetCustomAttributes<MapToApiVersionAttribute>().SelectMany(attr => attr.Versions);
 
-                    IEnumerable<ApiVersion> controllerVersions = methodinfo.DeclaringType
+                    IEnumerable<ApiVersion> controllerVersions = methodInfo.DeclaringType
                         ?.GetCustomAttributes<ApiVersionAttribute>().SelectMany(attr => attr.Versions) ?? new List<ApiVersion>();
 
                     bool controllerAndActionsVersionOverlap = controllerVersions.Intersect(actionVersions).Any();
 
                     IEnumerable<ApiVersion> versions = controllerAndActionsVersionOverlap ? actionVersions : controllerVersions;
 
-                    if (!versions.Any(v => $"v{v}" == version))
+                    if (versions.All(v => $"v{v}" != version))
                     {
                         return false;
                     }
 
                     ApiParameterDescription? versionParameter = apiDescription.ParameterDescriptions.SingleOrDefault(desc => desc.Name == "version");
 
-                    var className = methodinfo.DeclaringType?.Name;
+                    var className = methodInfo.DeclaringType?.Name;
                     var values = apiDescription.RelativePath?.Split('/').ToArray();
 
                     if (versionParameter != null)

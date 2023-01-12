@@ -7,9 +7,7 @@ namespace HotelAirportService.Domain
     {
         public string CustomerName { get; set; }
         public string AmountOfLuggage { get; set; }
-        [JsonIgnore]
         public ICollection<Booking> Bookings { get; set; }
-        [JsonIgnore]
         public ICollection<Ride> Rides { get; set; }
     }
 }

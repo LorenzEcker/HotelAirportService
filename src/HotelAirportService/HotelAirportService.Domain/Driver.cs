@@ -7,7 +7,6 @@ namespace HotelAirportService.Domain
     {
         public int Seats { get; set; }
         public string DriverName { get; set; }
-        [JsonIgnore]
         public ICollection<Ride> Rides { get; set; }
     }
 }

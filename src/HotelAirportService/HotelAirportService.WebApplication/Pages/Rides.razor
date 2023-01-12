@@ -201,7 +201,7 @@
 
     private void ShowSuccessNotification()
     {
-        NotificationService.Notify(NotificationSeverity.Info, "Buchung erfolgreich.", "Sie können die Buch noch ändern", 5000);
+        NotificationService.Notify(NotificationSeverity.Success, "Buchung erfolgreich.", "Sie können die Buchung noch ändern", 5000);
     }
 
     private void ShowErrorNotification()
@@ -214,7 +214,7 @@
         HttpResponseMessage res = await HttpClient.DeleteAsync($"http://localhost:5030/api/v1.0/Ride/{rideModel.RideId}");
         if (res.StatusCode == HttpStatusCode.OK)
         {
-            NotificationService.Notify(NotificationSeverity.Info, "Delete", "successfull");
+            NotificationService.Notify(NotificationSeverity.Success, "Delete", "successfull");
             if (rideModel.TravelType == TravelType.Arrival)
             {
                 arrivalRide = new() { TravelType = TravelType.Arrival };

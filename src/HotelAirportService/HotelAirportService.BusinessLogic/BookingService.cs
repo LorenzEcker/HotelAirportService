@@ -59,7 +59,7 @@ namespace HotelAirportService.BusinessLogic
                 }
             });
 
-            //check for driver with no occupation for the day
+            //check for drivers with no occupation for the day
             //if it there is one assign ride to him
             foreach (var d in allDrivers)
             {

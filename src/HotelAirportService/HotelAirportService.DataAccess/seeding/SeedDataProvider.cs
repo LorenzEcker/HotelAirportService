@@ -12,13 +12,13 @@ public class SeedDataProvider
 
     public SeedDataProvider()
     {
-        Airports = loadJsonFromFile<List<Airport>>("seeding/json/airports.json");
-        Drivers = loadJsonFromFile<List<Driver>>("seeding/json/drivers.json");
-        Customers = loadJsonFromFile<List<Customer>>("seeding/json/customers.json");
-        Bookings = loadJsonFromFile<List<Booking>>("seeding/json/bookings.json");
+        Airports = LoadJsonFromFile<List<Airport>>("seeding/json/airports.json");
+        Drivers = LoadJsonFromFile<List<Driver>>("seeding/json/drivers.json");
+        Customers = LoadJsonFromFile<List<Customer>>("seeding/json/customers.json");
+        Bookings = LoadJsonFromFile<List<Booking>>("seeding/json/bookings.json");
     }
 
-    private TData loadJsonFromFile<TData>(string filePath)
+    private static TData LoadJsonFromFile<TData>(string filePath)
     {
         using StreamReader r = new(filePath);
         string json = r.ReadToEnd();

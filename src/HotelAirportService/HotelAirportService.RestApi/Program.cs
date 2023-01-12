@@ -5,6 +5,7 @@ using HotelAirportService.Extensions.WebApplication;
 using HotelAirportService.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +16,10 @@ builder.Services.AddOptionServices();
 builder.Services.AddRepositories();
 builder.Services.AddAppServices();
 builder.Services.AddDatabases();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson(builder =>
+{
+    builder.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 builder.Services.AddCrossOriginRequests();
 builder.Services.AddVersioning();
 builder.Services.AddSwagger();
@@ -48,7 +52,6 @@ using (var scope = app.Services.CreateScope())
     CorsOptions corsOptions = scope.ServiceProvider.GetRequiredService<IOptions<CorsOptions>>().Value;
     app.UseCors(corsOptions.PolicyName);
 }
-
 
 app.SeedDatabase();
 
