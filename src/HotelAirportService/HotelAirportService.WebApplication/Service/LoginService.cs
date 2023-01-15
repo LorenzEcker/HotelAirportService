@@ -21,7 +21,7 @@ public class LoginService : ILoginService
         try
         {
             booking = await httpClient
-                .GetFromJsonAsync<Booking>($"http://localhost:5030/api/v1.0/Booking/{bookingCode}");
+                .GetFromJsonAsync<Booking>($"api/v1.0/Booking/{bookingCode}");
         }
         catch
         {

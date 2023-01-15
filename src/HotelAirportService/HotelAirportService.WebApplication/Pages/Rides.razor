@@ -144,7 +144,7 @@
             }),
                 Encoding.UTF8, "application/json");
 
-            using HttpResponseMessage res = await HttpClient.PostAsync("http://localhost:5030/api/v1.0/Booking", jsonContent);
+            using HttpResponseMessage res = await HttpClient.PostAsync("api/v1.0/Booking", jsonContent);
             if (res.StatusCode == HttpStatusCode.OK)
             {
                 try
@@ -183,7 +183,7 @@
             }),
                 Encoding.UTF8, "application/json");
 
-            using HttpResponseMessage res = await HttpClient.PostAsync("http://localhost:5030/api/v1.0/Booking", jsonContent);
+            using HttpResponseMessage res = await HttpClient.PostAsync("api/v1.0/Booking", jsonContent);
         }
         else
         {
@@ -194,7 +194,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        airports = await HttpClient.GetFromJsonAsync<List<Airport>>("http://localhost:5030/api/v1.0/Airport");
+        airports = await HttpClient.GetFromJsonAsync<List<Airport>>("api/v1.0/Airport");
         arrivalRide.AirportId = airports.Select(a => a.Id).FirstOrDefault();
         departureRide.AirportId = airports.Select(a => a.Id).FirstOrDefault();
     }
@@ -211,7 +211,7 @@
 
     private async Task DeleteRide(NewRideModel rideModel)
     {
-        HttpResponseMessage res = await HttpClient.DeleteAsync($"http://localhost:5030/api/v1.0/Ride/{rideModel.RideId}");
+        HttpResponseMessage res = await HttpClient.DeleteAsync($"/api/v1.0/Ride/{rideModel.RideId}");
         if (res.StatusCode == HttpStatusCode.OK)
         {
             NotificationService.Notify(NotificationSeverity.Success, "Delete", "successfull");
